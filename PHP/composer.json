@@ -1,5 +1,7 @@
 {
     "require": {
-        "automattic/woocommerce": "^3.0"
+        "automattic/woocommerce": "^3.0",
+        "fabpot/goutte": "^4.0",
+        "symfony/panther": "^0.6.0"
     }
 }
