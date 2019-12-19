@@ -1,18 +1,13 @@
-<?php 
+<?php
 
-include ('vendor/autoload.php');
-
-$url = "https://www.acehardware.com/search?query=1000117";
+require __DIR__.'/vendor/autoload.php'; // Composer's autoloader
 
 $client = \Symfony\Component\Panther\Client::createChromeClient();
+$client->request('GET', 'https://api-platform.com'); // Yes, this website is 100% written in JavaScript
+$client->clickLink('Support');
 
-$crawler = $client->request('GET', $url);
+// Wait for an element to be rendered
+$crawler = $client->waitFor('.support');
 
-$fullPageHtml = $crawler->html();
-
-// $imageFilter = $crawler->filter('.zoomWindow')->css();
-
-print_r($fullPageHtml);
-
-
-
+echo $crawler->filter('.support')->text();
+$client->takeScreenshot('screen.png'); // Yeah, screenshot!
