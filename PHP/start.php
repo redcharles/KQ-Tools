@@ -1,13 +1,11 @@
 <?php
 
-require __DIR__ . '/controller/db.php';
 require __DIR__ . '/vendor/autoload.php';
 require __DIR__ . '/controller/api.php';
 require __DIR__ . '/controller/scrape.php';
 require __DIR__ . '/controller/gmail.php';
 
 
-$DB         = new DB;
 $emails     = new fetchEmails;
 $scraper    = new scraper;
 
