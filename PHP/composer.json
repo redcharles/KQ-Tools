@@ -1,6 +1,0 @@
-{
-    "require": {
-        "automattic/woocommerce": "^3.0",
-        "fabpot/goutte": "^4.0"
-    }
-}
