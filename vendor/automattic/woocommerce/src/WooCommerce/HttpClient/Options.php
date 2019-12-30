@@ -24,7 +24,7 @@ class Options
     /**
      * Default request timeout.
      */
-    const TIMEOUT = 15;
+    const TIMEOUT = 120;
 
     /**
      * Default WP API prefix.

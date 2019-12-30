@@ -141,6 +141,9 @@ class fetchEmails {
                 if($count++ >= $max_emails) break;
             }
          
+        } else {
+            imap_close($inbox);
+            return false;
         } 
          
         /* close the connection */

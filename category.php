@@ -48,7 +48,7 @@ class Categories
         }
 
         foreach ($catArray as $key => $value) {
-
+            // Create parent categories
             $catName = ucwords(strtolower($key));
             $data = [
                 'name' => $catName
@@ -60,30 +60,54 @@ class Categories
                 $db->query($sql);
                 $db->bind(':name', $catName);
                 $db->bind(':woo_id', $results->id);
-                $db->execute();
+                $caught = false;
+                try {
+                    $db->execute();
+                } catch(Exception $e){
+                    $caught = true;
+                    $returnArr['errors'][] = $e->getMessage();
+                }
+                if($caught === false){
+                    $returnArr['newPrimCat'][] = $catName;
+                }
+                
             }
-
+            
             foreach ($value as $data) {
+                // Create subcategories
+                
                 $catName = ucwords(strtolower($data));
+                
                 $dataSub = [
                     'name' => $catName
                 ];
+                
                 if ($catName == 'Blank') {
                     continue;
                 }
-
-                if ($api->returnCatId($catName)) {
+                if ($api->returnCatId($catName) || strlen($catName) < 1) {
+                    
                 } else {
                     $resultsSub = $api->addCat($dataSub);
                     $sql = "INSERT INTO categories (name, woo_id, parent_id) VALUES (:name, :woo_id, :parent_id)";
                     $db->query($sql);
                     $db->bind(':name', $catName);
                     $db->bind(':woo_id', $resultsSub->id);
-                    $db->bind(':parent_id', $results->id);
-                    $db->execute();
+                    $db->bind(':parent_id', $resultsSub->id);
+                    $catch = false;
+                    try {
+                        $db->execute();
+                    } catch(Exception $e){
+                        $caught = true;
+                        $returnArr['errors'][] = $e->getMessage();
+                    }
+                    if($catch === false){
+                        $returnArr['newSubCat'][] = $catName;
+                    }
                 }
             }
-            echo "\n";
         }
+        $returnArr['success'] = true;
+        return $returnArr;
     }
 }

@@ -3,6 +3,10 @@ require __DIR__ . '/../vendor/autoload.php';
 require_once 'db.php';
 use Automattic\WooCommerce\Client;
 
+define("site_url", "http://testwp.reddresssolutions.com");
+define("public_key", "ck_e8e9ec7d5c3bef32ad0915699ef576c5e6d704f4");
+define("secret_key", "cs_916133d78ed2185ced99181e07b0000d7468257d");
+
 /**
  * 
  *  Methods for handling POST/GET request and pushing to woocommerce API 
@@ -14,9 +18,9 @@ class API {
 
     function Create($data = NULL){
         $woocommerce = new Client(
-            'http://142.93.61.155/', 
-            'ck_0974d5f1edbcffc57a3486b8956f0d85520bc4da', 
-            'cs_bfaa938e5772028fa90c83866930a016a035945d',
+            site_url, 
+            public_key, 
+            secret_key,
             [
                 'wp_api' => true, 
                 'version' => 'wc/v3',
@@ -24,14 +28,44 @@ class API {
             ]
         );        
         $response = $woocommerce->post('products', $data);
-        return json_decode($response);
+        return $response;
+    }
+
+    function batchCreate($data = null){
+        $woocommerce = new Client(
+            site_url, 
+            public_key, 
+            secret_key,
+            [
+                'wp_api' => true, 
+                'version' => 'wc/v3',
+                'verify_ssl' => false
+            ]
+        );        
+        $response = $woocommerce->post('products/batch', $data);
+        return $response;
+    }
+    
+    function Update($data = NULL, $WooId = NULL){
+        $woocommerce = new Client(
+            site_url, 
+            public_key, 
+            secret_key,
+            [
+                'wp_api' => true, 
+                'version' => 'wc/v3',
+                'verify_ssl' => false
+            ]
+        );        
+        $response = $woocommerce->put("products/$WooId", $data);
+        return $response;
     }
 
     public function listCats(){
         $woocommerce = new Client(
-            'http://142.93.61.155/', 
-            'ck_0974d5f1edbcffc57a3486b8956f0d85520bc4da', 
-            'cs_bfaa938e5772028fa90c83866930a016a035945d',
+            site_url, 
+            public_key, 
+            secret_key,
             [
                 'wp_api' => true, 
                 'version' => 'wc/v3',
@@ -44,9 +78,9 @@ class API {
     }
     public function addCat($data){
         $woocommerce = new Client(
-            'http://142.93.61.155/', 
-            'ck_0974d5f1edbcffc57a3486b8956f0d85520bc4da', 
-            'cs_bfaa938e5772028fa90c83866930a016a035945d',
+            site_url, 
+            public_key, 
+            secret_key,
             [
                 'wp_api' => true, 
                 'version' => 'wc/v3',

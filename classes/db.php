@@ -10,8 +10,8 @@
 
 	class Database {
 		private $host = 'localhost';
-		private $user = 'kq_converter';
-		private $pass = 'kq_converter';
+		private $user = 'kqadmin';
+		private $pass = 'kqadmin';
 		private $dbname = 'kq_converter';
 
 		private $dbh;
@@ -23,7 +23,7 @@
 		public function __construct() {
 			$dsn = 'mysql:host=' . $this->host . ';dbname=' . $this->dbname;
 			$options = array(
-				PDO::ATTR_PERSISTENT => true,
+				PDO::ATTR_PERSISTENT => false,
 				PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
 			);
 			
