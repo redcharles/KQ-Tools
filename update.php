@@ -5,9 +5,9 @@
  *
  */
 
-require_once __DIR__ . '/controller/db.php';
-require_once __DIR__ . '/controller/api.php';
-require_once __DIR__ . '/controller/scrape.php';
+require_once __DIR__ . '/classes/db.php';
+require_once __DIR__ . '/classes/api.php';
+require_once __DIR__ . '/classes/scrape.php';
 require_once __DIR__ . '/category.php';
 
 
@@ -22,7 +22,7 @@ class WooMethods
         $cat = new Categories;
         $scraper = new scraper;
 
-        $sql = "SELECT * FROM products WHERE ImageURL IS NOT NULL AND WooId IS NULL";
+        $sql = "SELECT * FROM products WHERE ImageURL IS NOT NULL AND WooId IS NULL AND SKU IS NOT NULL";
 
         $db->query($sql);
         $db->execute();
@@ -140,8 +140,18 @@ class WooMethods
         return $returnArr;
     }
 
+    public function updateDb(){
+        $db = new Database;
+        $api = new API;
+        
+
+        print_r($wooList);
+
+        exit;
+    }
+
     public function batchAdd($updateCount = null){
-        $defaultCount = 20;
+        $defaultCount = 10;
         $updateCount = (is_null($updateCount) ? $defaultCount : $updateCount);
 
         $db = new Database;
@@ -157,13 +167,12 @@ class WooMethods
         $results = $db->single();
         
         $count = (int) $results->count;
-        $updateCount = 0;
+        
         for($x = 0; $x < $count; $x+=$updateCount){            
-            $sql = "SELECT * FROM products WHERE ImageUrl IS NOT NULL AND WooId IS NULL LIMIT $updateCount";
+            $sql = "SELECT * FROM products WHERE ImageUrl IS NOT NULL AND WooId IS NULL LIMIT $defaultCount";
             $db->query($sql);
             $results = $db->resultSet();
             $data = [];
-            
             foreach($results as $key => $value){
                 $catId = ( is_object($api->returnCatId($value->Category) )  ? $api->returnCatId($value->Category)->woo_id : "0" );
                 $subCatId = ( is_object($api->returnCatId($value->Subcategory) )  ? $api->returnCatId($value->Subcategory)->woo_id : "0" );   
@@ -191,27 +200,35 @@ class WooMethods
                 
             } // end foreach
             $caught = false;
-            
+            $skuList = array();
+            foreach($data['create'] as $key => $value){
+                $sku = $value['sku'];
+                $skuList[] = $sku;
+            }
+
             try { 
-                $batchUpdate = $api->batchCreate($data);
+                $batchUpdate = (object) $api->batchCreate($data);
             } catch (Exception $e){
                 $caught = true;
                 $returnArr['error'][] = $e->getMessage();
             } 
-            
-            if(!$caught) {
-                $updateCount++;
-                foreach($batchUpdate->create as $k => $v){
-                    $returnArr['NewSkus'][] = $v->sku;
+            if(!$caught){
+                foreach($skuList as $key => $value){
+                    $data = [
+                        'sku' => $value
+                    ];
+                    $wooList = $api->getAll($data);
+                    $id = $wooList[0]->id;
+                    $returnArr['NewSkus'][] = $value;
+
                     $updateSQL = "UPDATE products SET WooId=:id WHERE SKU=:sku ";
                     $db->query($updateSQL);
-        
-                    $db->bind(':sku', $v->sku);
-                    $db->bind(':id', $v->id);
-        
+                    $db->bind(':sku', $value);
+                    $db->bind(':id', $id);
                     $db->execute();
-                } // end foreach
+                }
             }
+            
         }//end for
         $returnArr['success'] = true;
         $returnArr['count'] = $updateCount;

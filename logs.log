@@ -1,0 +1,347 @@
+stdClass Object
+(
+    [create] => Array
+        (
+            [0] => stdClass Object
+                (
+                    [id] => 0
+                    [error] => stdClass Object
+                        (
+                            [code] => product_invalid_sku
+                            [message] => Invalid or duplicated SKU.
+                            [data] => stdClass Object
+                                (
+                                    [status] => 400
+                                    [resource_id] => 208
+                                )
+
+                        )
+
+                )
+
+            [1] => stdClass Object
+                (
+                    [id] => 0
+                    [error] => stdClass Object
+                        (
+                            [code] => product_invalid_sku
+                            [message] => Invalid or duplicated SKU.
+                            [data] => stdClass Object
+                                (
+                                    [status] => 400
+                                    [resource_id] => 210
+                                )
+
+                        )
+
+                )
+
+            [2] => stdClass Object
+                (
+                    [id] => 0
+                    [error] => stdClass Object
+                        (
+                            [code] => product_invalid_sku
+                            [message] => Invalid or duplicated SKU.
+                            [data] => stdClass Object
+                                (
+                                    [status] => 400
+                                    [resource_id] => 212
+                                )
+
+                        )
+
+                )
+
+            [3] => stdClass Object
+                (
+                    [id] => 0
+                    [error] => stdClass Object
+                        (
+                            [code] => product_invalid_sku
+                            [message] => Invalid or duplicated SKU.
+                            [data] => stdClass Object
+                                (
+                                    [status] => 400
+                                    [resource_id] => 214
+                                )
+
+                        )
+
+                )
+
+            [4] => stdClass Object
+                (
+                    [id] => 0
+                    [error] => stdClass Object
+                        (
+                            [code] => product_invalid_sku
+                            [message] => Invalid or duplicated SKU.
+                            [data] => stdClass Object
+                                (
+                                    [status] => 400
+                                    [resource_id] => 216
+                                )
+
+                        )
+
+                )
+
+            [5] => stdClass Object
+                (
+                    [id] => 0
+                    [error] => stdClass Object
+                        (
+                            [code] => product_invalid_sku
+                            [message] => Invalid or duplicated SKU.
+                            [data] => stdClass Object
+                                (
+                                    [status] => 400
+                                    [resource_id] => 218
+                                )
+
+                        )
+
+                )
+
+            [6] => stdClass Object
+                (
+                    [id] => 0
+                    [error] => stdClass Object
+                        (
+                            [code] => product_invalid_sku
+                            [message] => Invalid or duplicated SKU.
+                            [data] => stdClass Object
+                                (
+                                    [status] => 400
+                                    [resource_id] => 220
+                                )
+
+                        )
+
+                )
+
+            [7] => stdClass Object
+                (
+                    [id] => 0
+                    [error] => stdClass Object
+                        (
+                            [code] => product_invalid_sku
+                            [message] => Invalid or duplicated SKU.
+                            [data] => stdClass Object
+                                (
+                                    [status] => 400
+                                    [resource_id] => 222
+                                )
+
+                        )
+
+                )
+
+            [8] => stdClass Object
+                (
+                    [id] => 0
+                    [error] => stdClass Object
+                        (
+                            [code] => product_invalid_sku
+                            [message] => Invalid or duplicated SKU.
+                            [data] => stdClass Object
+                                (
+                                    [status] => 400
+                                    [resource_id] => 224
+                                )
+
+                        )
+
+                )
+
+            [9] => stdClass Object
+                (
+                    [id] => 0
+                    [error] => stdClass Object
+                        (
+                            [code] => product_invalid_sku
+                            [message] => Invalid or duplicated SKU.
+                            [data] => stdClass Object
+                                (
+                                    [status] => 400
+                                    [resource_id] => 226
+                                )
+
+                        )
+
+                )
+
+            [10] => stdClass Object
+                (
+                    [id] => 0
+                    [error] => stdClass Object
+                        (
+                            [code] => product_invalid_sku
+                            [message] => Invalid or duplicated SKU.
+                            [data] => stdClass Object
+                                (
+                                    [status] => 400
+                                    [resource_id] => 228
+                                )
+
+                        )
+
+                )
+
+            [11] => stdClass Object
+                (
+                    [id] => 0
+                    [error] => stdClass Object
+                        (
+                            [code] => product_invalid_sku
+                            [message] => Invalid or duplicated SKU.
+                            [data] => stdClass Object
+                                (
+                                    [status] => 400
+                                    [resource_id] => 230
+                                )
+
+                        )
+
+                )
+
+            [12] => stdClass Object
+                (
+                    [id] => 0
+                    [error] => stdClass Object
+                        (
+                            [code] => product_invalid_sku
+                            [message] => Invalid or duplicated SKU.
+                            [data] => stdClass Object
+                                (
+                                    [status] => 400
+                                    [resource_id] => 232
+                                )
+
+                        )
+
+                )
+
+            [13] => stdClass Object
+                (
+                    [id] => 0
+                    [error] => stdClass Object
+                        (
+                            [code] => product_invalid_sku
+                            [message] => Invalid or duplicated SKU.
+                            [data] => stdClass Object
+                                (
+                                    [status] => 400
+                                    [resource_id] => 234
+                                )
+
+                        )
+
+                )
+
+            [14] => stdClass Object
+                (
+                    [id] => 0
+                    [error] => stdClass Object
+                        (
+                            [code] => product_invalid_sku
+                            [message] => Invalid or duplicated SKU.
+                            [data] => stdClass Object
+                                (
+                                    [status] => 400
+                                    [resource_id] => 236
+                                )
+
+                        )
+
+                )
+
+            [15] => stdClass Object
+                (
+                    [id] => 0
+                    [error] => stdClass Object
+                        (
+                            [code] => product_invalid_sku
+                            [message] => Invalid or duplicated SKU.
+                            [data] => stdClass Object
+                                (
+                                    [status] => 400
+                                    [resource_id] => 238
+                                )
+
+                        )
+
+                )
+
+            [16] => stdClass Object
+                (
+                    [id] => 0
+                    [error] => stdClass Object
+                        (
+                            [code] => product_invalid_sku
+                            [message] => Invalid or duplicated SKU.
+                            [data] => stdClass Object
+                                (
+                                    [status] => 400
+                                    [resource_id] => 240
+                                )
+
+                        )
+
+                )
+
+            [17] => stdClass Object
+                (
+                    [id] => 0
+                    [error] => stdClass Object
+                        (
+                            [code] => product_invalid_sku
+                            [message] => Invalid or duplicated SKU.
+                            [data] => stdClass Object
+                                (
+                                    [status] => 400
+                                    [resource_id] => 242
+                                )
+
+                        )
+
+                )
+
+            [18] => stdClass Object
+                (
+                    [id] => 0
+                    [error] => stdClass Object
+                        (
+                            [code] => product_invalid_sku
+                            [message] => Invalid or duplicated SKU.
+                            [data] => stdClass Object
+                                (
+                                    [status] => 400
+                                    [resource_id] => 244
+                                )
+
+                        )
+
+                )
+
+            [19] => stdClass Object
+                (
+                    [id] => 0
+                    [error] => stdClass Object
+                        (
+                            [code] => product_invalid_sku
+                            [message] => Invalid or duplicated SKU.
+                            [data] => stdClass Object
+                                (
+                                    [status] => 400
+                                    [resource_id] => 246
+                                )
+
+                        )
+
+                )
+
+        )
+
+)

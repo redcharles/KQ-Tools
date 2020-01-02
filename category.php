@@ -7,8 +7,8 @@
  */
 
 
-require_once __DIR__ . '/controller/db.php';
-require_once __DIR__ . '/controller/api.php';
+require_once __DIR__ . '/classes/db.php';
+require_once __DIR__ . '/classes/api.php';
 
 class Categories
 {

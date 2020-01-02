@@ -32,7 +32,7 @@ function secondsToTime($s)
 $starttime = microtime(true);
 $rowCount = 0;
 $tempArr = array();
-if (true) {
+if (false) {
     $dir = 'feeds/';
     $itemArr = array();
     $folderContents = scandir($dir);
@@ -57,12 +57,18 @@ if (true) {
                 continue;
             }
             $rowCount++;
-            $getImageUrl = $scraper->getImageUrl($key);
-            $getDesc = $scraper->getProductDescription($key);
-            $getName = (!$scraper->getProductName($key) ? NULL : $scraper->getProductName($key));
+            $imageUrl           = null;
+            $getName            = null;
+            $prodDescription    = null;
 
-            $imageUrl = ( !$getImageUrl ?  NULL : $getImageUrl  );
-            $prodDescription = ( !$getDesc ? NULL : $getDesc );
+            $fetchData = $scraper->fetchAll($key);
+
+            if($fetchData != false){
+                $imageUrl = $fetchData['image'];
+                $prodDescription = $fetchData['description'];
+                $getName = $fetchData['name'];
+            }
+            
             
             $value->imageURL = $imageUrl;
             $value->SKU = $key;
@@ -135,37 +141,59 @@ if (true) {
         }
     }
     // Remove Parsed Files
-    // foreach($folderContents as $key => $value){
-    //     if($value == 'all.csv'){
-    //         unlink($dir . $value);
-    //     }
-    //     if($value == 'daily.csv'){
-    //         unlink($dir . $value);
-    //     }
-    // }    
+    foreach($folderContents as $key => $value){
+        if($value == 'all.csv'){
+            unlink($dir . $value);
+        }
+        if($value == 'daily.csv'){
+            unlink($dir . $value);
+        }
+    }    
 }
 
 $resultsObj = new stdClass();
-
+echo "Creating Categories: \n";
 $createCategories               = $cat->createCategories();
+echo "Starting to add products.. \n";
 $batchAdd                       = $woo->batchAdd();
+echo "Updating products... \n";
 $updateProducts                 = $woo->updateProducts();
 // Set Category Messages
-$resultObj->newPrimCat          = $createCategories['newPrimCat'];
-$resultObj->newSubCat           = $createCategories['newSubCat'];
+$resultsObj->newPrimCat          = (isset($createCategories['newPrimCat']) ? json_encode($createCategories['newPrimCat']) : json_encode("None"));
+$resultsObj->newSubCat           = (isset($createCategories['newSubCat'])  ? json_encode($createCategories['newSubCat']) : json_encode("None") );
 // Set CSV Messages
-$resultObj->csvErrors           = $tempArr['error'];
-$resultObj->csvUpdated          = $tempArr['UpdatedInDb'];
-$resultObj->csvSame             = $tempArr['DataSame'];
-$resultObj->csvNew              = $tempArr['AddedToDb'];
+$resultsObj->csvErrors           = (isset($tempArr['error'])         ? json_encode($tempArr['error'])         : json_encode("None"));
+$resultsObj->csvUpdated          = (isset($tempArr['UpdatedInDb'])   ? json_encode($tempArr['UpdatedInDb'])   : json_encode("None"));
+$resultsObj->csvSame             = (isset($tempArr['DataSame'])      ? json_encode($tempArr['DataSame'])      : json_encode("None"));
+$resultsObj->csvNew              = (isset($tempArr['AddedToDb'])     ? json_encode($tempArr['AddedToDb'])     : json_encode("None"));
 // Set New Product Messages
-$resultsObj->NewProductCount    = $batchAdd['count'];
+$resultsObj->NewProductCount    = (isset($batchAdd['count'])        ? json_encode($batchAdd['count'])         : json_encode(0));
 // Set Updated Product Messages
-$resultsObj->UpdateCount        = $updateProducts['UpdateCount'];
-$resultsObj->UpdateList         = $updateProducts['UpdatedList'];
+$resultsObj->UpdateCount        = (isset($updateProducts['UpdateCount']) ? json_encode($updateProducts['UpdateCount'])   : json_encode("None"));
+$resultsObj->UpdateList         = (isset($updateProducts['UpdatedList']) ? json_encode($updateProducts['UpdatedList'])   : json_encode("None"));
 
 $endtime                        = microtime(true);
 $timediff                       = $endtime - $starttime;
 $resultsObj->Time               = secondsToTime($timediff);
+$resultsObj->DateRan            = date('Y-m-d H:i:s');
 
-return $resultsObj;
+
+
+$sql = "INSERT INTO logs (newCount, updateCount, csvErrors, csvUpdated, csvSame, csvNew, updateList, time, dateRan) 
+        VALUES (:newCount, :updateCount, :csvErrors, :csvUpdated, :csvSame, :csvNew, :updateList, :time, :dateRan)";
+$db->query($sql);
+$db->bind(':newCount', $resultsObj->NewProductCount);
+$db->bind(':updateCount', $resultsObj->UpdateCount);
+$db->bind(':csvErrors', $resultsObj->csvErrors);
+$db->bind(':csvUpdated', $resultsObj->csvUpdated);
+$db->bind(':csvSame', $resultsObj->csvSame);
+$db->bind(':csvNew', $resultsObj->csvNew);
+$db->bind(':updateList', $resultsObj->UpdateList);
+$db->bind(':time', $resultsObj->Time);
+$db->bind(':dateRan', $resultsObj->DateRan);
+
+try {
+    $db->execute();
+} catch(Exception $e){
+    echo $e->getMessage();
+}

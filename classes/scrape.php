@@ -52,6 +52,26 @@ class scraper
         return false;
     }
 
+    public function fetchAll($sku){
+        try {
+            $client = new Client();
+            $aceUrl = "https://www.acehardware.com/search?query=$sku";
+            $crawler = $client->request('GET', $aceUrl);
+            $tempArr = array();
+            if ($crawler->filter('img.mz-img-zoom')->count() > 0) {
+                $image = $crawler->filter('img.mz-img-zoom')->eq(0)->attr('src');
+                $name = $crawler->filter('#page-content > div:nth-child(12) > div.mz-productActions-wrap.col-xs-12.col-lg-5.mz-mobile-center > div.mz-productHeader.mz-mobile-center.hidden-sm.hidden-xs > h1')->text();
+                $desc = $crawler->filter('#productDetailsContainer')->html();
+                $tempArr['image'] = $image;
+                $tempArr['name'] = $name;
+                $tempArr['description'] = $desc;
+                return $tempArr;
+            }
+        } catch(Exception $e){
+            return false;
+        }
+    }
+
     public function compareData($obj1, $obj2)
     {
         $obj1 = (array) $obj1;

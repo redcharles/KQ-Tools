@@ -4,8 +4,8 @@ require_once 'db.php';
 use Automattic\WooCommerce\Client;
 
 define("site_url", "http://testwp.reddresssolutions.com");
-define("public_key", "ck_e8e9ec7d5c3bef32ad0915699ef576c5e6d704f4");
-define("secret_key", "cs_916133d78ed2185ced99181e07b0000d7468257d");
+define("public_key", "ck_79cae6f16fca6ced19ff779b113c3fe84abba896");
+define("secret_key", "cs_f53ed0976bdc9a8a9fffdd685b66fc820069ad72");
 
 /**
  * 
@@ -103,5 +103,34 @@ class API {
             return false;
         }
         
+    }
+
+    public function getSingle($sku){
+        $woocommerce = new Client(
+            site_url, 
+            public_key, 
+            secret_key,
+            [
+                'wp_api' => true, 
+                'version' => 'wc/v3',
+                'verify_ssl' => false
+            ]
+        );        
+        $results = $woocommerce->get('products/'.$sku);
+        return $results;
+    }
+    public function getAll($data){
+        $woocommerce = new Client(
+            site_url, 
+            public_key, 
+            secret_key,
+            [
+                'wp_api' => true, 
+                'version' => 'wc/v3',
+                'verify_ssl' => false
+            ]
+        );        
+        $results = $woocommerce->get('products', $data);
+        return $results;
     }
 }
