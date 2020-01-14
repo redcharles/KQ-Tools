@@ -28,7 +28,7 @@ $starttime = microtime(true);
 
 
 // If set to true, parse all.csv and insert raw values into db
-if(false){
+if(true){
     $dir = 'feeds/';
     $itemArr = array();
     $folderContents = scandir($dir);
@@ -44,47 +44,49 @@ if(false){
         $item->Vendor       = $csvArr[13];
         $item->RetailPrice  = $csvArr[9];
         $item->PromoPrice   = $csvArr[17];
-        $itemArr[$csvArr[0]] = $item;
+        $item->UPC          = $csvArr[18];
+        $item->UpcDateLast  = $csvArr[19];
+        $item->SKU          = $csvArr[0];
+        $itemArr[$item->SKU] = $item;
     }
     $tempArr = [];
-
+    
     foreach ($itemArr as $key => $value) {    
-        
-        if ($key == 'Item Number') {
+        if ($value->SKU == 'Item Number' || empty($value->SKU) ) {
             continue;
         }
         // Get this data later on, after insert
-        $getImageUrl = $key;
-        $getDesc = $key;
-        $getName = $key;
+        $getImageUrl = $value->SKU;
+        $getDesc = $value->SKU;
+        $getName = $value->SKU;
 
         $imageUrl = NULL;
         $prodDescription = NULL;
         
         $value->imageURL = $imageUrl;
-        $value->SKU = $key;
-
         
-            $date = date('Y-m-d H:i:s');
-            $sql = "INSERT INTO products (Category, Description, ProductDescription, ImageURL, PromoPrice, RetailPrice, SKU, Subcategory, Vendor, date_created) VALUES (:category, :description, :prodDescription, :imageURL, :promo, :retail, :sku, :subcat, :vendor, :date)";
-            $db->query($sql);
-            $db->bind(':category', $value->Cat);
-            $db->bind(':description', $value->Desc);    
-            $db->bind(':prodDescription', $prodDescription);
-            $db->bind(':imageURL', $imageUrl);
-            $db->bind(':promo', $value->PromoPrice);
-            $db->bind(':retail', $value->RetailPrice);
-            $db->bind(':sku', $key);
-            $db->bind(':subcat', $value->SubCat);
-            $db->bind(':vendor', $value->Vendor);
-            $db->bind(':date', $date);
-            $caught = false;
-            try {
-                $db->execute();
-            } catch (Exception $e){
-                $caught = true;
-                $tempArr['error'][] = $e->getMessage();
-            }
+        $date = date('Y-m-d H:i:s');
+        $sql = "INSERT INTO products (Category, Description, ProductDescription, ImageURL, PromoPrice, RetailPrice, SKU, Subcategory, Vendor, date_created, upc_code, upc_date_last) VALUES (:category, :description, :prodDescription, :imageURL, :promo, :retail, :sku, :subcat, :vendor, :date, :upcCode, :upcDate )";
+        $db->query($sql);
+        $db->bind(':category', $value->Cat);
+        $db->bind(':description', $value->Desc);    
+        $db->bind(':prodDescription', $prodDescription);
+        $db->bind(':imageURL', $imageUrl);
+        $db->bind(':promo', $value->PromoPrice);
+        $db->bind(':retail', $value->RetailPrice);
+        $db->bind(':sku', $value->SKU);
+        $db->bind(':subcat', $value->SubCat);
+        $db->bind(':vendor', $value->Vendor);
+        $db->bind(':date', $date);
+        $db->bind(':upcCode', $value->UPC);
+        $db->bind(':upcDate', date("Y-m-d", strtotime($value->UpcDateLast)) );
+        $caught = false;
+        try {
+            $db->execute();
+        } catch (Exception $e){
+            $caught = true;
+            echo $e->getMessage(), "\n";
+        }
     }
 }
 

@@ -85,15 +85,20 @@ class WooMethods
         $api = new API;
         $cat = new Categories;
         $scraper = new scraper;
-        
-        $sql = "SELECT * FROM products WHERE ImageURL IS NOT NULL AND WooId IS NOT NULL AND (date_created >= now() - Interval 12 HOUR OR date_updated >= now() - Interval 12 HOUR )";
+
+        $returnArr = array();
+        $returnArr['Status'] = 'Updating';
+        $sql = "SELECT * FROM `products` WHERE `date_updated` >= NOW() - INTERVAL 12 HOUR AND `ImageURL` IS NOT NULL AND `WooId` IS NOT NULL";
 
         $db->query($sql);
         $db->execute();
 
         $results = $db->resultSet();
         $updateCount = 0;
+        
         foreach ($results as $key => $value) {
+            
+
             $catId = ( is_object($api->returnCatId($value->Category) )  ? $api->returnCatId($value->Category)->woo_id : "0" );
             $subCatId = ( is_object($api->returnCatId($value->Subcategory) )  ? $api->returnCatId($value->Subcategory)->woo_id : "0" );
             $data = [
@@ -117,7 +122,7 @@ class WooMethods
                     ],
                 ],
             ];
-
+            
             $createProduct = $api->Update($data, $value->WooId);
             $updateSQL = "UPDATE products SET WooId=:id WHERE SKU=:sku ";
             $db->query($updateSQL);

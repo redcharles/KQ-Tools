@@ -79,9 +79,11 @@ class scraper
         unset($obj1['id']);
         unset($obj1['date_created']);
         unset($obj1['date_updated']);
-
+        unset($obj1['upc_code']);
+        unset($obj1['upc_date_last']);
+        
         $differenceCount = array_diff($obj1, $obj2);
-
+        
         if (count($differenceCount) > 0) {
             return true;
         } else {

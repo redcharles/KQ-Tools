@@ -3,7 +3,7 @@ require __DIR__ . '/../vendor/autoload.php';
 require_once 'db.php';
 use Automattic\WooCommerce\Client;
 
-define("site_url", "http://testwp.reddresssolutions.com");
+define("site_url", "https://kennyqueenhardware.com");
 define("public_key", "ck_79cae6f16fca6ced19ff779b113c3fe84abba896");
 define("secret_key", "cs_f53ed0976bdc9a8a9fffdd685b66fc820069ad72");
 

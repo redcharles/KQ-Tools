@@ -18,11 +18,11 @@ $db         = new Database;
 $api        = new API;
 $cat        = new Categories;
 $woo        = new WooMethods;
-// $emails->downloadEmails()
+//$emails->downloadEmails()
 
 function secondsToTime($s)
 {
-    $h = floor($s / 3600);
+    $h = floor($s / 3600); 
     $s -= $h * 3600;
     $m = floor($s / 60);
     $s -= $m * 60;
@@ -32,7 +32,8 @@ function secondsToTime($s)
 $starttime = microtime(true);
 $rowCount = 0;
 $tempArr = array();
-if (false) {
+if ($emails->downloadEmails()) {
+    echo "Updating DB: \n";
     $dir = 'feeds/';
     $itemArr = array();
     $folderContents = scandir($dir);
@@ -53,6 +54,7 @@ if (false) {
         fclose($csv);
         
         foreach ($itemArr as $key => $value) {    
+            $key = (string) $key;
             if ($key == 'Item Number') {
                 continue;
             }
@@ -75,11 +77,14 @@ if (false) {
             $skuCheck = "SELECT * FROM products WHERE SKU = :sku";
             $db->query($skuCheck);
             $db->bind(':sku', $key);
-            
             $db->execute();
+
+            echo "Checking SKU: $key \n";
+
             if ($db->rowCount() === 0) {
-                $date = date('Y-m-d H:i:s');
-                $sql = "INSERT INTO products (Category, Description, ProductDescription, ImageURL, PromoPrice, RetailPrice, SKU, Subcategory, Vendor, date_created) VALUES (:category, :description, :prodDescription, :imageURL, :promo, :retail, :sku, :subcat, :vendor, :date)";
+                echo "Inserting SKU: $key \n";
+                
+                $sql = "INSERT INTO products (Category, Description, ProductDescription, ImageURL, PromoPrice, RetailPrice, SKU, Subcategory, Vendor, date_created) VALUES (:category, :description, :prodDescription, :imageURL, :promo, :retail, :sku, :subcat, :vendor, NOW())";
                 $db->query($sql);
                 $db->bind(':category', $value->Cat);
                 if(is_null($getName)){
@@ -94,40 +99,43 @@ if (false) {
                 $db->bind(':sku', $key);
                 $db->bind(':subcat', $value->SubCat);
                 $db->bind(':vendor', $value->Vendor);
-                $db->bind(':date', $date);
+                
                 $caught = false;
                 try {
                     $db->execute();
                 } catch (Exception $e){
                     $caught = true;
                     $tempArr['error'][] = $e->getMessage();
+                    echo $e->getMessage(), "\n";
                 }
                 if($caught === false){
                     $tempArr['AddedToDb'][] = $key;
                 }
                 
             } else {
+                echo "Updating SKU: $key \n";
                 $results = $db->single();
                 $isDifferent = $scraper->compareData($results, $value);
                 if($isDifferent){
-                    $date = date('Y-m-d H:i:s');
-                    $updateSQL = "UPDATE products SET Category=:category, Description=:description, ImageURL=:imageURL, PromoPrice=:promo, RetailPrice=:retail, SKU=:sku, Subcategory=:subcat, Vendor=:vendor, date_updated=:date WHERE SKU=:sku ";
+                    $key = (string) $key;
+                    echo "Data different \n";
+                    
+                    $updateSQL = "UPDATE products 
+                                    SET PromoPrice=:promo, RetailPrice=:retail, date_updated=NOW() 
+                                    WHERE SKU=:sku ";
                     $db->query($updateSQL);
-                    $db->bind(':category', $value->Cat);
-                    $db->bind(':description', $value->Desc);
-                    $db->bind(':imageURL', $imageUrl);
                     $db->bind(':promo', $value->PromoPrice);
                     $db->bind(':retail', $value->RetailPrice);
                     $db->bind(':sku', $key);
-                    $db->bind(':subcat', $value->SubCat);
-                    $db->bind(':vendor', $value->Vendor);
-                    $db->bind(':date', $date);
+                    
                     $caught = false;
+                    echo "Attempting update: \n";
                     try {
                         $db->execute();
                     } catch (Exception $e){
                         $caught = true;
                         $tempArr['error'][] = $e->getMessage();
+                        echo $e->getMessage(), "\n";
                     }
                     if($caught === false){
                         $tempArr['UpdatedInDb'][] = $key;
@@ -141,18 +149,18 @@ if (false) {
         }
     }
     // Remove Parsed Files
-    foreach($folderContents as $key => $value){
-        if($value == 'all.csv'){
-            unlink($dir . $value);
-        }
-        if($value == 'daily.csv'){
-            unlink($dir . $value);
-        }
-    }    
+    // foreach($folderContents as $key => $value){
+    //     if($value == 'all.csv'){
+    //         unlink($dir . $value);
+    //     }
+    //     if($value == 'daily.csv'){
+    //         unlink($dir . $value);
+    //     }
+    // }    
 }
 
 $resultsObj = new stdClass();
-echo "Creating Categories: \n";
+echo "Creating/Updating Categories: \n";
 $createCategories               = $cat->createCategories();
 echo "Starting to add products.. \n";
 $batchAdd                       = $woo->batchAdd();
@@ -176,6 +184,9 @@ $endtime                        = microtime(true);
 $timediff                       = $endtime - $starttime;
 $resultsObj->Time               = secondsToTime($timediff);
 $resultsObj->DateRan            = date('Y-m-d H:i:s');
+
+
+
 
 
 
