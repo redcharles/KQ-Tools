@@ -37,7 +37,7 @@ if ($emails->downloadEmails()) {
     $dir = 'feeds/';
     $itemArr = array();
     $folderContents = scandir($dir);
-    $selectedCsv = (array_search('all.csv', $folderContents) ? 'all.csv' : 'daily.csv');
+    $selectedCsv = (array_search('all.csv', $folderContents) ? 'daily.csv' : 'daily.csv');
     if (isset($selectedCsv)) {
         $csv = fopen($dir . $selectedCsv, 'r');
         while (!feof($csv)) {
@@ -148,15 +148,15 @@ if ($emails->downloadEmails()) {
             }
         }
     }
-    // Remove Parsed Files
-    // foreach($folderContents as $key => $value){
-    //     if($value == 'all.csv'){
-    //         unlink($dir . $value);
-    //     }
-    //     if($value == 'daily.csv'){
-    //         unlink($dir . $value);
-    //     }
-    // }    
+    //Remove Parsed Files
+    foreach($folderContents as $key => $value){
+        if($value == 'all.csv'){
+            unlink($dir . $value);
+        }
+        if($value == 'daily.csv'){
+            unlink($dir . $value);
+        }
+    }    
 }
 
 $resultsObj = new stdClass();

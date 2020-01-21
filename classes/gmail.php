@@ -19,7 +19,7 @@ class fetchEmails {
         /* connect to gmail with your credentials */
         $hostname = '{imap.gmail.com:993/imap/ssl}INBOX';
         $username = 'export@reddresssolutions.com'; # e.g somebody@gmail.com
-        $password = 'Kenny123!!';
+        $password = 'qglaqhpkzeulueoq';
          
          
         /* try to connect */
