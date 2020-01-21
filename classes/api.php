@@ -2,10 +2,10 @@
 require __DIR__ . '/../vendor/autoload.php';
 require_once 'db.php';
 use Automattic\WooCommerce\Client;
-
-define("site_url", "https://kennyqueenhardware.com");
-define("public_key", "ck_79cae6f16fca6ced19ff779b113c3fe84abba896");
-define("secret_key", "cs_f53ed0976bdc9a8a9fffdd685b66fc820069ad72");
+$siteUrl = 'https://9ac16294.ngrok.io';
+define("site_url", $siteUrl);
+define("public_key", "ck_679efa67fe29fafa36e2355b334f5ea2b3ad8ba4");
+define("secret_key", "cs_e2eecc8c9d812251b496e8cb49951dbeb0f1c20a");
 
 /**
  * 
