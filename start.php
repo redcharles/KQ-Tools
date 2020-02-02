@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 /** 
  * 
@@ -32,12 +33,13 @@ function secondsToTime($s)
 $starttime = microtime(true);
 $rowCount = 0;
 $tempArr = array();
-if ($emails->downloadEmails()) {
+if (true) {
+    
     echo "Updating DB: \n";
     $dir = 'feeds/';
     $itemArr = array();
     $folderContents = scandir($dir);
-    $selectedCsv = (array_search('all.csv', $folderContents) ? 'daily.csv' : 'daily.csv');
+    $selectedCsv = (array_search('all.csv', $folderContents) ? 'all.csv' : 'all.csv');
     if (isset($selectedCsv)) {
         $csv = fopen($dir . $selectedCsv, 'r');
         while (!feof($csv)) {
@@ -158,14 +160,14 @@ if ($emails->downloadEmails()) {
         }
     }    
 }
-
+exit;
 $resultsObj = new stdClass();
 echo "Creating/Updating Categories: \n";
 $createCategories               = $cat->createCategories();
 echo "Starting to add products.. \n";
 $batchAdd                       = $woo->batchAdd();
 echo "Updating products... \n";
-$updateProducts                 = $woo->updateProducts();
+//$updateProducts                 = $woo->updateProducts();
 // Set Category Messages
 $resultsObj->newPrimCat          = (isset($createCategories['newPrimCat']) ? json_encode($createCategories['newPrimCat']) : json_encode("None"));
 $resultsObj->newSubCat           = (isset($createCategories['newSubCat'])  ? json_encode($createCategories['newSubCat']) : json_encode("None") );

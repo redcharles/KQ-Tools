@@ -20,44 +20,22 @@ $api        = new API;
 $cat        = new Categories;
 $woo        = new WooMethods;
 
-echo "Fixing updated dates: \n";
-$dir = 'feeds/';
-$itemArr = array();
-$folderContents = scandir($dir);
-$selectedCsv = (array_search('all.csv', $folderContents) ? 'all.csv' : 'daily.csv');
-if (isset($selectedCsv)) {
-    $csv = fopen($dir . $selectedCsv, 'r');
-    while (!feof($csv)) {
-        $csvArr             = fgetcsv($csv);
-        $item               = new stdClass();
-        $item->Desc         = $csvArr[1];
-        $item->Cat          = $csvArr[10];
-        $item->SubCat       = $csvArr[11];
-        $item->Vendor       = $csvArr[13];
-        $item->RetailPrice  = $csvArr[9];
-        $item->PromoPrice   = $csvArr[17];
-        $itemArr[$csvArr[0]] = $item;
-    }
-    fclose($csv);
-    
-    foreach ($itemArr as $key => $value) {    
-    
-        echo "Updating SKU: $key \n";
+$SQL = "SELECT * FROM products WHERE `ImageUrl` IS NULL";
 
-        $date = date('Y-m-d H:i:s');
-        $key = (string) $key;
-        $updateSQL = "UPDATE products SET date_updated=NOW() WHERE SKU=':sku' ";
-        $db->query($updateSQL);
+$db->query($SQL);
+$db->execute();
 
-        $db->bind(':sku', $key);
-        
-        $caught = false;
-        try {
-            $db->execute();
-        } catch (Exception $e){
-            $caught = true;
-            echo $e->getMessage(), "\n";
-        }
-        
-    } 
+$results = $db->resultSet();
+
+foreach($results AS $k => $v){
+    $fetchData = $scraper->fetchAll('36799');
+    print_r($fetchData);
+    exit;
+    // if($fetchData != false){
+    //     $imageUrl = $fetchData['image'];
+    //     $prodDescription = $fetchData['description'];
+    //     $getName = $fetchData['name'];
+
+    // }
+    
 }

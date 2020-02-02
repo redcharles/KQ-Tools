@@ -53,9 +53,13 @@ class Categories
             $data = [
                 'name' => $catName
             ];
-            if ($api->returnCatid($catName)) {
+            $parentId = null;
+            if ($api->returnCatId($catName)) {
+                //do something
             } else {
                 $results = $api->addCat($data);
+                $parentId = $results->id;
+
                 $sql = "INSERT INTO categories (name, woo_id) VALUES (:name, :woo_id)";
                 $db->query($sql);
                 $db->bind(':name', $catName);
@@ -73,39 +77,43 @@ class Categories
                 
             }
             
-            foreach ($value as $data) {
-                // Create subcategories
-                
-                $catName = ucwords(strtolower($data));
-                
-                $dataSub = [
-                    'name' => $catName
-                ];
-                
-                if ($catName == 'Blank') {
-                    continue;
-                }
-                if ($api->returnCatId($catName) || strlen($catName) < 1) {
+            if(!is_null($parentId)){
+                foreach ($value as $data) {
+                    // Create subcategories
                     
-                } else {
-                    $resultsSub = $api->addCat($dataSub);
-                    $sql = "INSERT INTO categories (name, woo_id, parent_id) VALUES (:name, :woo_id, :parent_id)";
-                    $db->query($sql);
-                    $db->bind(':name', $catName);
-                    $db->bind(':woo_id', $resultsSub->id);
-                    $db->bind(':parent_id', $resultsSub->id);
-                    $catch = false;
-                    try {
-                        $db->execute();
-                    } catch(Exception $e){
-                        $caught = true;
-                        $returnArr['errors'][] = $e->getMessage();
+                    $catName = ucwords(strtolower($data));
+                    
+                    $dataSub = [
+                        'name' => $catName,
+                        'parent' => $parentId
+                    ];
+    
+                    if ($catName == 'Blank') {
+                        continue;
                     }
-                    if($catch === false){
-                        $returnArr['newSubCat'][] = $catName;
+                    if ($api->returnCatId($catName) || strlen($catName) < 1) {
+                        
+                    } else {
+                        $resultsSub = $api->addCat($dataSub);
+                        $sql = "INSERT INTO categories (name, woo_id, parent_id) VALUES (:name, :woo_id, :parent_id)";
+                        $db->query($sql);
+                        $db->bind(':name', $catName);
+                        $db->bind(':woo_id', $resultsSub->id);
+                        $db->bind(':parent_id', $parentId);
+                        $catch = false;
+                        try {
+                            $db->execute();
+                        } catch(Exception $e){
+                            $caught = true;
+                            $returnArr['errors'][] = $e->getMessage();
+                        }
+                        if($catch === false){
+                            $returnArr['newSubCat'][] = $catName;
+                        }
                     }
                 }
             }
+            
         }
         $returnArr['success'] = true;
         return $returnArr;
